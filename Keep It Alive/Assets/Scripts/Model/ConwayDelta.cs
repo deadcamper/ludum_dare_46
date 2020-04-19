@@ -6,6 +6,6 @@ using UnityEngine;
 /// </summary>
 public class ConwayDelta
 {
-    public HashSet<Vector2Int> created = new HashSet<Vector2Int>();
-    public HashSet<Vector2Int> killed = new HashSet<Vector2Int>();
+    public HashSet<Vector3Int> created = new HashSet<Vector3Int>();
+    public HashSet<Vector3Int> killed = new HashSet<Vector3Int>();
 }
