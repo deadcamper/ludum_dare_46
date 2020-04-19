@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,20 +16,24 @@ public class ConwayGame : MonoBehaviour
 
     public float secondsBetweenSteps = 3.0f;
 
-    private float lastStep = 0f;
+    private float currentStepTime = 0f;
 
     public int berriesCollected = 0;
     public int berriesRequired = 25;
 
     public int seeds = 3;
     public int totalSeeds = 100;
+    public float TimeToNextStep { get { return Mathf.Max(0, secondsBetweenSteps - currentStepTime); } }
 
-    public float TimeToNextStep { get { return Mathf.Max(0, secondsBetweenSteps - (Time.time - lastStep)); } }
+    public int DaysAlive { get; private set; } = 0;
+
+    public int CellsAlive { get { return gameOfLife.aliveCells.Count; } }
+    public int DeadCellsRemoved { get; private set; } = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        lastStep = Time.time;
+        currentStepTime = 0;
         UpdateTiles();
     }
 
@@ -47,14 +52,24 @@ public class ConwayGame : MonoBehaviour
             CheckPlayerToggleCell(cellPos);
         }
 
-        while (Time.time > lastStep + secondsBetweenSteps)
+        while (currentStepTime >= secondsBetweenSteps)
         {
-            lastStep += secondsBetweenSteps;
+            currentStepTime -= secondsBetweenSteps;
             ConwayDelta update = gameOfLife.NextStep();
+
+            if (gameOfLife.aliveCells.Any())
+            {
+                DaysAlive++;
+            }
+            else
+            {
+                DaysAlive = 0;
+            }
 
             UpdateTiles();
         }
-        
+
+        currentStepTime += Time.deltaTime;
     }
 
     void CheckPlayerToggleCell(Vector3Int cellPos)
@@ -68,6 +83,7 @@ public class ConwayGame : MonoBehaviour
         if (!hasLife && cropTileMap.GetTile(cellPos) != emptyCell)
         {
             cropTileMap.SetTile(cellPos, emptyCell);
+            DeadCellsRemoved++;
             return;
         }
 

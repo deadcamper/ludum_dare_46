@@ -19,6 +19,8 @@ public class ConwayGameOfLife
 
     public Dictionary<Vector3Int, int> timeAlive = new Dictionary<Vector3Int, int>();
 
+    public int NumSteps { get; private set; } = 0;
+
     public bool IsInBounds(Vector3Int cell)
     {
         if (cell.x > upperRightBound.x || cell.x < lowerLeftBound.x)
@@ -59,6 +61,8 @@ public class ConwayGameOfLife
         ApplyNeighborMathToCells(aliveCells, neighborhoodWorksheet, out result);
 
         ApplyLiveUpdate(result);
+
+        NumSteps++;
 
         return result;
     }
