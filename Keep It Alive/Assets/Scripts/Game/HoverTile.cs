@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class HoverTile : MonoBehaviour
 {
-    public TileBase hoverTile;
+    public SpriteRenderer hoverTile;
+
+    //public TileBase hoverTile;
 
     public Tilemap tilemap;
 
@@ -14,6 +16,11 @@ public class HoverTile : MonoBehaviour
     private Vector3Int lastTile = new Vector3Int(-100,-100, 0);
 
     // Update is called once per frame
+
+    private void Start()
+    {
+        
+    }
     void Update()
     {
         var mousePos = Input.mousePosition;
@@ -22,14 +29,9 @@ public class HoverTile : MonoBehaviour
         Vector3 vec = Camera.main.ScreenToWorldPoint(mousePos);
         Vector3Int cellPos = tilemap.WorldToCell(vec);
 
-        if (cellPos != lastTile)
-        {
-            tilemap.SwapTile(hoverTile, null);
-            if (game.gameOfLife.IsInBounds(cellPos))
-            {
-                tilemap.SetTile(cellPos, hoverTile);
-            }
-            lastTile = cellPos;
-        }
+        Vector3 spritePos = tilemap.CellToWorld(cellPos) + new Vector3(0.5f,0.5f,0);
+
+        hoverTile.transform.position = spritePos;
+        hoverTile.enabled = game.gameOfLife.IsInBounds(cellPos);
     }
 }

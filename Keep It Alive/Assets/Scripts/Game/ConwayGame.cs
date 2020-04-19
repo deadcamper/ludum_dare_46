@@ -30,6 +30,9 @@ public class ConwayGame : MonoBehaviour
     public int CellsAlive { get { return gameOfLife.aliveCells.Count; } }
     public int DeadCellsRemoved { get; private set; } = 0;
 
+    public bool firstClick = false;
+    public bool isRunning = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,26 +53,36 @@ public class ConwayGame : MonoBehaviour
             Vector3Int cellPos = cropTileMap.WorldToCell(vec);
 
             CheckPlayerToggleCell(cellPos);
+
+            if(!firstClick)
+            {
+                firstClick = true;
+                isRunning = true;
+            }
+            
         }
 
-        while (currentStepTime >= secondsBetweenSteps)
+        if (isRunning)
         {
-            currentStepTime -= secondsBetweenSteps;
-            ConwayDelta update = gameOfLife.NextStep();
-
-            if (gameOfLife.aliveCells.Any())
+            while (currentStepTime >= secondsBetweenSteps)
             {
-                DaysAlive++;
-            }
-            else
-            {
-                DaysAlive = 0;
+                currentStepTime -= secondsBetweenSteps;
+                ConwayDelta update = gameOfLife.NextStep();
+
+                if (gameOfLife.aliveCells.Any())
+                {
+                    DaysAlive++;
+                }
+                else
+                {
+                    DaysAlive = 0;
+                }
+
+                UpdateTiles();
             }
 
-            UpdateTiles();
+            currentStepTime += Time.deltaTime;
         }
-
-        currentStepTime += Time.deltaTime;
     }
 
     void CheckPlayerToggleCell(Vector3Int cellPos)

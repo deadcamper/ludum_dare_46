@@ -41,8 +41,8 @@ public class ConwayGameSimUI : MonoBehaviour
     
     private void UpdateClock()
     {
-        float realFill = (simulator.TimeToNextStep / simulator.secondsBetweenSteps);
-        float fuzzyFill = realFill * realFill * realFill;
+        float offFill = (simulator.TimeToNextStep / simulator.secondsBetweenSteps) * 1.25f;
+        float fuzzyFill = offFill * offFill;
 
         if (simulator.gameOfLife.NumSteps != lastDayCount)
         {
