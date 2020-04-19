@@ -6,7 +6,7 @@ public class ConwayGame : MonoBehaviour
 {
     public ConwayGameOfLife gameOfLife;
 
-    public Tilemap tilemap;
+    public Tilemap cropTileMap;
 
     public TileBase emptyCell = null;
 
@@ -18,6 +18,8 @@ public class ConwayGame : MonoBehaviour
     private float lastStep = 0f;
 
     public int berriesCollected = 0;
+    public int berriesRequired = 25;
+
     public int seeds = 3;
     public int totalSeeds = 100;
 
@@ -40,7 +42,7 @@ public class ConwayGame : MonoBehaviour
 
             Vector3 vec = Camera.main.ScreenToWorldPoint(mousePos);
 
-            Vector3Int cellPos = tilemap.WorldToCell(vec);
+            Vector3Int cellPos = cropTileMap.WorldToCell(vec);
 
             CheckPlayerToggleCell(cellPos);
         }
@@ -63,15 +65,15 @@ public class ConwayGame : MonoBehaviour
         bool hasLife = gameOfLife.aliveCells.Contains(cellPos);
 
         // Clear of dead
-        if (!hasLife && tilemap.GetTile(cellPos) != emptyCell)
+        if (!hasLife && cropTileMap.GetTile(cellPos) != emptyCell)
         {
-            tilemap.SetTile(cellPos, emptyCell);
+            cropTileMap.SetTile(cellPos, emptyCell);
             return;
         }
 
         if (hasLife)
         {
-            TileBase lastTile = tilemap.GetTile(cellPos);
+            TileBase lastTile = cropTileMap.GetTile(cellPos);
             PlayerToggleCell(cellPos);
 
             if (lastTile == liveSeedStages[liveSeedStages.Count-1])
@@ -111,7 +113,7 @@ public class ConwayGame : MonoBehaviour
         {
             change = gameOfLife.SetCell(cellPos, false);
             //change = gameOfLife.aliveCells.Remove(new Vector3Int(cellPos.x, cellPos.y, 0));
-            tilemap.SetTile(cellPos, emptyCell);
+            cropTileMap.SetTile(cellPos, emptyCell);
         }
 
         return change;
@@ -120,12 +122,12 @@ public class ConwayGame : MonoBehaviour
     void UpdateTile(Vector3Int cellPos)
     {
         bool isAlive = gameOfLife.aliveCells.Contains(cellPos);
-        TileBase tile = tilemap.GetTile(cellPos);
+        TileBase tile = cropTileMap.GetTile(cellPos);
 
         if (isAlive)
         {
             int index = Mathf.Min(gameOfLife.timeAlive[cellPos] - 1, liveSeedStages.Count - 1);
-            tilemap.SetTile(cellPos, liveSeedStages[index]);
+            cropTileMap.SetTile(cellPos, liveSeedStages[index]);
         }
         else
         {
@@ -134,11 +136,11 @@ public class ConwayGame : MonoBehaviour
                 if (liveSeedStages.Contains(tile))
                 {
                     int index = liveSeedStages.IndexOf(tile);
-                    tilemap.SetTile(cellPos, deadSeedStages[index]);
+                    cropTileMap.SetTile(cellPos, deadSeedStages[index]);
                 }
                 else
                 {
-                    tilemap.SetTile(cellPos, emptyCell);
+                    cropTileMap.SetTile(cellPos, emptyCell);
                 }
             }
         }

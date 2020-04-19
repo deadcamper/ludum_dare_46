@@ -24,6 +24,6 @@ public class ConwayGameSimUI : MonoBehaviour
             clockTimerImage.fillAmount = fuzzyFill;
         }
         seedsCounter.text = "Seeds: " + simulator.seeds.ToString("00") + "/" + simulator.totalSeeds;
-        berriesCounter.text = "\"Berries\": " + simulator.berriesCollected.ToString("#");
+        berriesCounter.text = "Berries: " + simulator.berriesCollected.ToString("#");
     }
 }
